@@ -48,6 +48,19 @@
   #corrections button:hover {
     filter: brightness(1.1);
   }
+
+  footer {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 1em;
+    text-align: center;
+  }
+
+  footer a {
+    color: slategrey;
+    font-size: .9em;
+  }
 </style>
 
 <section contenteditable="true" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" id="textInput">
@@ -58,5 +71,7 @@
   <h3><span id="words-counter"></span> words, <span id="corrections-counter"></span> suggestions</h3>
   <ol id="corrections"></ol>
 </aside>
+
+<footer><a href="https://lean8086.com">Leandro Linares</a></footer>
 
 <script type="module" src="./ui.mjs"></script>
