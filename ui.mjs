@@ -2,31 +2,43 @@ import correct from './corrector.mjs';
 
 const textInput = document.getElementById('textInput');
 const accordion = document.getElementById('corrections');
+const wordsCounter = document.getElementById('words-counter');
+const correctionsCounter = document.getElementById('corrections-counter');
+
 let corrections = {};
-function check(text) {
+let timeout;
+
+function checkSpell(text) {
   corrections = {};
   accordion.innerHTML = '';
-  text.toLowerCase().trim().split(' ').forEach((w) => {
+  textInput.innerHTML = textInput.textContent;
+  const words = text.toLowerCase().match(/[a-z]+/g);
+  words.forEach((w) => {
     const word = w.trim();
     if (!word.length) return;
     const rightWord = correct(word);
     if (word === rightWord) return;
     if (corrections[word]) return;
     corrections[word] = rightWord;
-    textInput.innerHTML = textInput.innerHTML.replace(word, `<span>${word}</span>`);
+    accordion.innerHTML += `<li><s>${word}</s> → <button data-wrong="${w}" title="Apply correction">${rightWord}</button></li>`;
+    textInput.innerHTML = textInput.innerHTML.replace(w, `<span>${w}</span>`);
   });
-  accordion.insertAdjacentHTML('beforeend', Object.keys(corrections).map(word => `
-    <li><s>${word}</s> → <button>${corrections[word]}</button></li>
-  `).join(''));
+  wordsCounter.textContent = words.length;
+  correctionsCounter.textContent = Object.keys(corrections).length;
 }
 
-let typing = false;
 textInput.addEventListener('input', (ev) => {
-  if (typing) return;
-  typing = true;
-  setTimeout(() => {
-    typing = false;
-    check(ev.target.textContent);
-  }, 2000);
+  clearTimeout(timeout);
+  timeout = setTimeout(() => checkSpell(ev.target.textContent), 2000);
 });
-window.addEventListener('load', () => check(textInput.textContent));
+
+accordion.addEventListener('click', (ev) => {
+  const { tagName, dataset, textContent } = ev.target;
+  if (tagName !== 'BUTTON') return;
+  textInput.innerHTML = textInput.innerHTML.replace(`<span>${dataset.wrong}</span>`, textContent);
+  accordion.querySelector(`[data-wrong="${dataset.wrong}"]`).parentElement.remove();
+  delete corrections[dataset.wrong];
+  correctionsCounter.textContent = Object.keys(corrections).length;
+});
+
+window.addEventListener('load', () => checkSpell(textInput.textContent));
