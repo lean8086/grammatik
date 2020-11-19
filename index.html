@@ -1,0 +1,29 @@
+<style>
+  #textInput span {
+    border-bottom: 3px solid lightsalmon;
+  }
+
+  #corrections button {
+    appearance: none;
+    border: none;
+    display: inline-block;
+    background: lightseagreen;
+    color: whitesmoke;
+  }
+</style>
+
+<section
+  contenteditable="true"
+  autocomplete="off"
+  autocorrect="off"
+  autocapitalize="off"
+  spellcheck="false"
+  id="textInput"
+  autofocus="true"
+>
+  Start writting some text here to be correkted.
+</section>
+
+<ol id="corrections"></ol>
+
+<script type="module" src="./ui.mjs"></script>
